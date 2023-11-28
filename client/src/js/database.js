@@ -12,24 +12,27 @@ const initdb = async () =>
     },
   });
 
-// TODO: Add logic to a method that accepts some content and adds it to the database
-const contactDb = await openDB('contact', 1);
 export const putDb = async (content) => {
-  const db = await contactDb.transaction('contact', 'readwrite');
-  const tx = db.transaction('jate', 'readwrite');
+  console.log('PUT');
+  const jateDb = await openDB('jate', 1);
+  const tx = jateDb.transaction('jate', 'readwrite');
   const store = tx.objectStore('jate');
-  const result = await store.add(content);
-  return result;
+  const request = store.put({ id: 1, value: content });
+  const result = await request;
+  console.log('Data saved', result.value);
 };
-  
 
-// TODO: Add logic for a method that gets all the content from the database
 export const getDb = async () => {
-  const db = await contactDb.transaction('contact', 'readwrite');
-  const tx = db.transaction('jate', 'readonly');
+  console.log('GET ');
+  const jateDb = await openDB('jate', 1);
+  const tx = jateDb.transaction('jate', 'readonly');
   const store = tx.objectStore('jate');
-  const allItems = await store.getAll();
-  return allItems;
+  const request = store.get(1);
+  const result = await request;
+  result
+    ? console.log('Data retrieved', result.value)
+    : console.log('Data not ');
+  return result?.value;
 };
 
 initdb();
